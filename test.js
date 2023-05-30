@@ -53,10 +53,12 @@ function recommendScreenings(userInput) {
   
     if (userInput.familyHistory === "yes" && userInput.lastScreeningYearsAgo["Colonoscopy"] === "Never") {
       const screeningAge = userInput.earliestDiagnosisAge - 10;
+      if (screeningAge > 10) {
       screenings.push({
         name: `Colonoscopy starting at age ${screeningAge}`,
         descriptor: screeningDescriptors["Colonoscopy starting at age"]
       });
+    }
     } else if (userInput.age >= 45 && userInput.age <=75) {
       if (userInput.lastScreeningYearsAgo["Colonoscopy"] === "Never" || userInput.lastScreeningYearsAgo["Colonoscopy"] >= 10) {
       screenings.push({
@@ -150,6 +152,7 @@ document.getElementById("userInputForm").addEventListener("submit", function(eve
 
   if (recommendedScreenings.length === 0) {
     recommendedScreeningsContainer.textContent = "No recommended screenings.";
+    document.getElementById("badgecount").textContent = "0";
   } else {
     let screeningsHTML = "<ul>";
     for (const screeningObj of recommendedScreenings) {
@@ -160,5 +163,11 @@ document.getElementById("userInputForm").addEventListener("submit", function(eve
     }
     screeningsHTML += "</ul>";
     recommendedScreeningsContainer.innerHTML = screeningsHTML;
+
+    const badge = document.querySelector(".badge.bg-primary.rounded-pill");
+    badge.textContent = recommendedScreenings.length.toString(); 
   }
+
+   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
