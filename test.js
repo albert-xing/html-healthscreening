@@ -57,7 +57,7 @@ function recommendScreenings(userInput) {
         name: `Colonoscopy starting at age ${screeningAge}`,
         descriptor: screeningDescriptors["Colonoscopy starting at age"]
       });
-    } else if (userInput.age >= 50 && userInput.age <=75) {
+    } else if (userInput.age >= 45 && userInput.age <=75) {
       if (userInput.lastScreeningYearsAgo["Colonoscopy"] === "Never" || userInput.lastScreeningYearsAgo["Colonoscopy"] >= 10) {
       screenings.push({
         name: "Colonoscopy",
