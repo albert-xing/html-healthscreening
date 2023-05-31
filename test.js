@@ -28,41 +28,63 @@ function showPapSmearBox(value) {
   papSmearBox.style.display = (value === "Female") ? "block" : "none";
 }
 
-function showMammogramBox(value) {
+function showMammogramBox(age, sex) {
   const mammogramBox = document.getElementById("mammogram");
-  mammogramBox.style.display = (value === "Female") ? "block" : "none";
+  mammogramBox.style.display = (age >= 40 && sex === "Female") ? "block" : "none";
 }
+
+
+function showColonoscopyBox(value) {
+  const colonoscopyBox = document.getElementById("colonoscopy");
+  colonoscopyBox.style.display = (value >= 45) ? "block" : "none";
+}
+
+document.getElementById("age").addEventListener("input", function() {
+  const age = parseInt(this.value);
+  const sex = document.getElementById("sex").value;
+  showMammogramBox(age, sex);
+});
+
+document.getElementById("sex").addEventListener("change", function() {
+  const age = parseInt(document.getElementById("age").value);
+  const sex = this.value;
+  showMammogramBox(age, sex);
+});
 
 document.getElementById("sex").addEventListener("change", function() {
   showPapSmearBox(this.value);
-  showMammogramBox(this.value);
+});
+
+
+document.getElementById("age").addEventListener("change", function() {
+  showColonoscopyBox(this.value);
 });
 
 function recommendScreenings(userInput) {
   const screeningDescriptors = {
-    "Colonoscopy": "Colonoscopy is a procedure that examines the large intestine for abnormalities or signs of colorectal cancer.",
-    "Mammogram": "A mammogram is an X-ray image of the breasts used to detect and diagnose breast diseases, including breast cancer.",
-    "Lung Cancer Screening (annual)": "Lung cancer screening is a test that is performed annually to detect lung cancer at an early stage in individuals at high risk.",
-    "Pap Smear": "A Pap smear is a screening test for cervical cancer that checks for the presence of abnormal cells in the cervix.",
-    "Liver Ultrasound": "A liver ultrasound is a diagnostic imaging test that uses sound waves to create pictures of the liver and detect abnormalities.",
-    "Colonoscopy starting at age": "Colonoscopy starting at a certain age is recommended for individuals with a family history of colon cancer to detect and prevent colorectal cancer.",
+    "Colonoscopy": "A colonoscopy or a CT colonography is recommended in individuals between 45 and 75, every 10 years",
+    "Mammogram": "A mammogram is recommended in women between ages 40 and 74, every 2 years.",
+    "Lung Cancer Screening (annual)": "An annual low-dose CT is recommended in adults 50 to 80 years old, who currently smoke or have quit within the past 15 years, and have a 20 pack year smoking history.",
+    "Pap Smear": "A Pap smear is recommended for women older than 21, every 3 years. Women older than 30 may also require additional HPV testing.",
+    "Liver Ultrasound": "For Asian-Americans with chronic hepatitis B, the AASLD recommends liver ultrasounds for Asian-American men older than 40, and Asian-American women older than 50.",
+    "Colonoscopy starting at age": "Colon cancer screenings are recommended in individuals 10 years prior to the age of diagnosis of their first-degree relative.",
   };
 
   var screenings = [];
 
   
-    if (userInput.familyHistory === "yes" && userInput.lastScreeningYearsAgo["Colonoscopy"] === "Never") {
+    if (userInput.familyHistory === "yes" && userInput.age <45) {
       const screeningAge = userInput.earliestDiagnosisAge - 10;
       if (screeningAge > 10) {
       screenings.push({
-        name: `Colonoscopy starting at age ${screeningAge}`,
+        name: `Colon Cancer screening starting at age ${screeningAge}`,
         descriptor: screeningDescriptors["Colonoscopy starting at age"]
       });
     }
     } else if (userInput.age >= 45 && userInput.age <=75) {
       if (userInput.lastScreeningYearsAgo["Colonoscopy"] === "Never" || userInput.lastScreeningYearsAgo["Colonoscopy"] >= 10) {
       screenings.push({
-        name: "Colonoscopy",
+        name: "Colon Cancer Screening",
         descriptor: screeningDescriptors["Colonoscopy"]
       });
     } else if (userInput.familyHistory === "yes" && userInput.lastScreeningYearsAgo["Colonoscopy"] === "11") {
@@ -78,19 +100,19 @@ function recommendScreenings(userInput) {
   if (userInput.age >= 40 && userInput.age <=74 && userInput.sex === "Female") {
     if (userInput.lastScreeningYearsAgo["Mammogram"] === "Never") {
       screenings.push({
-        name: "Mammogram",
+        name: "Breast Cancer Screening",
         descriptor: screeningDescriptors["Mammogram"]
       });
     } else if ((userInput.lastScreeningYearsAgo["Mammogram"] ?? 0) > 1) {
       screenings.push({
-        name: "Mammogram",
+        name: "Breast Cancer Screening",
         descriptor: screeningDescriptors["Mammogram"]
       });
     }
   }
 
   const smokeYears = parseInt(userInput.smokeYears);
-  if (userInput.smoker === "yes" && smokeYears >= 20) {
+  if (userInput.smoker === "yes" && smokeYears >= 20 && userInput.age >=50 && userInput.age <=80) {
     screenings.push({
       name: "Lung Cancer Screening (annual)",
       descriptor: screeningDescriptors["Lung Cancer Screening (annual)"]
@@ -99,12 +121,12 @@ function recommendScreenings(userInput) {
 
   if (userInput.lastPapSmear >= 3 && userInput.age >= 21 && userInput.age <= 65) {
     screenings.push({
-      name: "Pap Smear",
+      name: "Cervical Cancer Screen",
       descriptor: screeningDescriptors["Pap Smear"]
     });
   } else if (userInput.age >= 21 && userInput.age <=65 && userInput.lastPapSmear === "Never") {
     screenings.push({
-      name: "Pap Smear",
+      name: "Cervical Cancer Screen",
       descriptor: screeningDescriptors["Pap Smear"]
     });
   }
