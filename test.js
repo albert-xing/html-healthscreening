@@ -2,7 +2,7 @@ class UserInput {
   constructor(age, sex, medicalHistory, race, lastScreeningYearsAgo, familyHistory, earliestDiagnosisAge, lastPapSmear, smoker, smokeYears) {
     this.age = age;
     this.sex = sex;
-    this.medicalHistory = medicalHistory;
+    this.medicalHistory = medicalHistory
     this.race = race;
     this.lastScreeningYearsAgo = lastScreeningYearsAgo;
     this.familyHistory = familyHistory;
@@ -12,6 +12,9 @@ class UserInput {
     this.smokeYears = smokeYears;
   }
 }
+
+
+/* Show boxes based on age/sex */
 
 function showAgeBox(value) {
   const ageBox = document.getElementById("ageBox");
@@ -23,9 +26,9 @@ function showSmokeYearsBox(value) {
   smokeYearsBox.style.display = (value === "yes") ? "block" : "none";
 }
 
-function showPapSmearBox(value) {
+function showPapSmearBox(age, sex) {
   const papSmearBox = document.getElementById("papSmear");
-  papSmearBox.style.display = (value === "Female") ? "block" : "none";
+  papSmearBox.style.display = (age >= 21 && sex === "Female") ? "block" : "none";
 }
 
 function showMammogramBox(age, sex) {
@@ -33,32 +36,25 @@ function showMammogramBox(age, sex) {
   mammogramBox.style.display = (age >= 40 && sex === "Female") ? "block" : "none";
 }
 
-
 function showColonoscopyBox(value) {
   const colonoscopyBox = document.getElementById("colonoscopy");
   colonoscopyBox.style.display = (value >= 45) ? "block" : "none";
 }
 
-document.getElementById("age").addEventListener("input", function() {
-  const age = parseInt(this.value);
+function handleAgeSexChange() {
+  const age = parseInt(document.getElementById("age").value);
   const sex = document.getElementById("sex").value;
   showMammogramBox(age, sex);
-});
+  showPapSmearBox(age, sex);
+}
 
-document.getElementById("sex").addEventListener("change", function() {
-  const age = parseInt(document.getElementById("age").value);
-  const sex = this.value;
-  showMammogramBox(age, sex);
-});
-
-document.getElementById("sex").addEventListener("change", function() {
-  showPapSmearBox(this.value);
-});
-
-
+document.getElementById("age").addEventListener("input", handleAgeSexChange);
+document.getElementById("sex").addEventListener("change", handleAgeSexChange);
 document.getElementById("age").addEventListener("change", function() {
   showColonoscopyBox(this.value);
 });
+
+/* Calculate Screenings */
 
 function recommendScreenings(userInput) {
   const screeningDescriptors = {
@@ -149,6 +145,8 @@ function recommendScreenings(userInput) {
   return screenings;
 }
 
+/* input constructor*/ 
+
 document.getElementById("userInputForm").addEventListener("submit", function(event) {
   event.preventDefault();
 
@@ -171,6 +169,8 @@ document.getElementById("userInputForm").addEventListener("submit", function(eve
   const recommendedScreenings = recommendScreenings(userInput);
 
   const recommendedScreeningsContainer = document.getElementById("recommendedScreenings");
+
+  /* outputs recommended screening*/ 
 
   if (recommendedScreenings.length === 0) {
     recommendedScreeningsContainer.textContent = "No recommended screenings.";
