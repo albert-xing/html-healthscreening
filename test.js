@@ -63,7 +63,7 @@ function recommendScreenings(userInput) {
     "Lung Cancer Screening (annual)": "An annual low-dose CT is recommended in adults 50 to 80 years old, who currently smoke or have quit within the past 15 years, and have a 20 pack year smoking history.",
     "Pap Smear": "A Pap smear is recommended for women older than 21, every 3 years. Women older than 30 may also require additional HPV testing.",
     "Liver Ultrasound": "For Asian-Americans with chronic hepatitis B, the AASLD recommends liver ultrasounds for Asian-American men older than 40, and Asian-American women older than 50.",
-    "Colonoscopy starting at age": "Colon cancer screenings are recommended in individuals 10 years prior to the age of diagnosis of their first-degree relative.",
+    "Colonoscopy starting at age": "Colon cancer screenings with a colonoscopy or CT colonography are recommended in individuals 10 years prior to the age of diagnosis of their first-degree relative.",
   };
 
   var screenings = [];
